@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  baseURL: "https://api.deepseek.com/v1",
-});
+function getClient() {
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY || "",
+    baseURL: "https://api.deepseek.com/v1",
+  });
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -31,7 +33,7 @@ Please provide:
 
 Write with vivid, immersive prose.`;
 
-    const completion = await client.chat.completions.create({
+    const completion = await getClient().chat.completions.create({
       model: "deepseek-chat",
       messages: [{ role: "user", content: prompt }],
       max_tokens: 2000,
